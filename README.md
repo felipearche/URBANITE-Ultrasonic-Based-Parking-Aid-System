@@ -1,93 +1,116 @@
-# Título del proyecto
+# Urbanite Project
 
 ## Authors
 
-* **Alumno 1** - email: [alumno@alumno.es](mailto:alumno@alumno.es)
-* **Alumno 2** - email: [alumno@alumno.es](mailto:alumno@alumno.es)
+* **Felipe Fernández-Arche** - email: [f.fernandez-arche@alumnos.upm.es](mailto:alumno@alumno.es)
+* **David Pedraza** - email: [david.pedraza@alumno.upm.es](mailto:alumno@alumno.es)
 
-Ponga una breve descripción del proyecto **aquí** en castellano e inglés.
+This project demonstrates how the project Urbanite works using an ultrasound transceiver to measure the distance to an object in a parking aid system mounted on a car. It uses a finite state machine (FSM) to control the ultrasound sensor, a display (RGB LED) to show the distance, and a button to interact with the system.
 
-Puede añadir una imagen de portada **de su propiedad** aquí. Por ejemplo, del montaje final, o una captura de osciloscopio, etc.
-
-**Las imágenes se deben guardar en la carpeta `docs/assets/imgs/` y se pueden incluir en el documento de la siguiente manera:**
-
-```markdown
-![Texto alternativo](docs/assets/imgs/imagen.png)
-```
-
-NOTA: **NO** añada el código ```markdown``` en el fichero `README.md` de su proyecto, sino lo de dentro. Este código es un para mostrar de forma literal cómo se puede añadir una imagen al fichero `README.md`.
-
-**Añada un enlace a un vídeo público de su propiedad aquí con la demostración del proyecto explicando lo que haya hecho en la versión V5.**
-
-Para añadir un enlace a un vídeo de Youtube, puede usar el siguiente código:
-
-```markdown
-[![Texto alternativo](docs/assets/imgs/imagen.png)](https://youtu.be/ID_DEL_VIDEO "Texto al pasar el ratón por encima de la imagen.")
-```
-
-NOTA: **NO** añada el código ```markdown``` sino lo de dentro. Este código es un para mostrar de forma literal cómo se puede añadir un enlace a un vídeo de Youtube al fichero `README.md`.
+Este proyecto demuestra cómo funciona el proyecto Urbanite utilizando un transceptor de ultrasonidos para medir la distancia a un objeto en un sistema de asistencia de estacionamiento montado en un automóvil. Emplea una máquina de estados finitos (FSM) para controlar el sensor de ultrasonidos, una pantalla (LED RGB) para mostrar la distancia y un botón para interactuar con el sistema.
 
 ## Version 1
 
-Breve descripción de la versión 1.
+In Version 1, the system works with the user button only. The user button is connected to the pin PC13. The code uses the EXTI13 interrupt to detect the button press.
 
-* Para poner un texto en negrita se usa el símbolo `**` de manera consecutiva. Por ejemplo: **Texto en negrita**
-* Para poner un texto en cursiva se usa el símbolo `*` de manera consecutiva. Por ejemplo: *Texto en cursiva*
-* Para poner un texto en cursiva y negrita se usa el símbolo `***` de manera consecutiva. Por ejemplo: ***Texto en cursiva y negrita***
-
-Para añadir subsecciones se usa el símbolo `#` de manera consecutiva. Por ejemplo:
-
-### Subsección 1
-
-Breve descripción de la subsección 1.
-
-Para añadir una lista de elementos se usa el símbolo `-` de manera consecutiva. Por ejemplo:
-
-* Elemento 1
-* Elemento 2
-* Elemento 3
-
-Para añadir una lista de elementos numerados se usa el símbolo `1.` de manera consecutiva. Por ejemplo:
-
-1. Elemento 1
-2. Elemento 2
-3. Elemento 3
-
-Para añadir un enlace a una página web se usa el siguiente código:
-
-```markdown
-Enlace a [Google](https://www.google.com).
-```
-
-NOTA: **NO** añada el código ```markdown``` sino lo de dentro. Este código es un para mostrar de forma literal cómo se puede añadir un enlace a una página web al fichero `README.md`.
-
-Puede añadir tablas de la siguiente manera:
-
-| Columna 1 | Columna 2 | Columna 3 |
-| --------- | --------- | --------- |
-| Valor 1   | Valor 2   | Valor 3   |
-| Valor 4   | Valor 5   | Valor 6   |
-
-Para añadir un enlace a un fichero `.c` o `.h` puede usar el siguiente código. Se trata de enlaces a ficheros `.html` que se generan automáticamente con la documentación del código al ejecutar Doxygen y que se encuentran en la carpeta `docs/html/`.
-
-```markdown
-Enlace a la [FSM de Version 1](fsm__button_8c.html).
-```
-
-NOTA: **NO** añada el código ```markdown``` sino lo de dentro. Este código es un para mostrar de forma literal cómo se puede añadir un enlace a un fichero `.c` o `.h` al fichero `README.md`.
+| **Parameter** |      **Value**       |
+| ------------- | -------------------- |
+| Pin           | PC13                 |
+| Mode          | Input                |
+| Pull up/ down	| No push no pull      |
+| EXTI	        | EXTI13               |
+| ISR           | EXTI15_10_IRQHandler |
+| Priority	    | 1                    |
+| Subpriority	| 0                    |
+| Debounce time | 100-200 ms           |
 
 ## Version 2
 
-Breve descripción de la versión 2.
+In Version 2, the system adds the ultrasonic transceiver to measure the distance to an object. The trigger pin is connected to the pin PB0, and the echo pin is connected to the pin PA1. The code uses the TIM2, TIM3 and TIM5 timers to control the ultrasonic transceiver.
+
+To measure the distance in centimeters with a timer resolution of 1 microseconds, we can say that 1 cm is equivalent to 58.3 microseconds. The speed of sound is 343 m/s at 20ºC. The ultrasonic transceiver is the HC-SR04.
+
+The characteristics and connections of the ultrasonic transceiver HC-SR04 are shown in the table below:
+
+|   **Parameter**   |                      **Value**                      |
+| ----------------- | --------------------------------------------------- |
+| Power supply      | 5 V                                                 |
+| Current           | 15 mA                                               |
+| Angle of aperture | 15º                                                 |
+| Frequency         | 40 kHz                                              |
+| Measurement range	| 2 cm to 400 cm                                      |
+| Pins              | PB0 (Trigger) and PA1 (Echo)                        |
+| Mode	            | Output (Trigger) and alternative (Echo)             |
+| Pull up/ down	    | No pull                                             |
+| Timer             | TIM3 (Trigger) and TIM2 (Echo)                      |
+| Channel	        | (see the Alternate Function table in the datasheet) |
+
+To **measure the echo time**, we will configure the timer TIM2 in **input capture mode**, which will capture the value of the counter at the moment the echo signal is activated and deactivated.
+
+| **Parameter** |               **Value**               |
+| ------------- | ------------------------------------- |
+| Timer         | TIM2                                  |
+| Prescaler     | (to be calculated for 1 microseconds) |
+| Period        | (to be calculated for 1 microseconds) |
+| ISR           | `TIM2_IRQHandler()`                   |
+| Priority   	| 3                                     |
+| Subpriority   | 0                                     |
+
+The timer that controls the **timeout between consecutive measurements** is TIM5. The characteristics of this timer are shown in the table below. The FSM will give a value every PORT_PARKING_SENSOR_TIMEOUT_MS milliseconds.
+
+| **Parameter** |                        **Value**                        |
+| ------------- | ------------------------------------------------------- |
+| Timer         | TIM5                                                    |
+| Prescaler     | (to be calculated for 1 PORT_PARKING_SENSOR_TIMEOUT_MS) |
+| Period        | (to be calculated for 1 PORT_PARKING_SENSOR_TIMEOUT_MS) |
+| ISR           | `TIM5_IRQHandler()`                                     |
+| Priority   	| 5                                                       |
+| Subpriority   | 0                                                       |
 
 ## Version 3
 
-Breve descripción de la versión 3.
+In Version 3, the system adds the display, which is an RGB LED. The RGB LED is connected to the pins PB6 (red), PB8 (green), and PB9 (blue). The code uses the TIM4 timer to control the frequency of the PWM signal for each color. The RGB LED will show the distance to the object detected. The characteristics of the display are shown in the table below.
+
+|    **Parameter**     |                      **Value**                      |
+| -------------------- | --------------------------------------------------- |
+| Pin LED red          | PB6                                                 |
+| Pin LED green        | PB8                                                 |
+| Pin LED blue         | PB9                                                 |
+| Mode                 | Alternative                                         |
+| Pull up/ down        | No pull                                             |
+| Timer                | TIM4                                                |
+| Channel LED red      | (see the Alternate Function table in the datasheet) |
+| Channel LED green    | (see the Alternate Function table in the datasheet) |
+| Channel LED blue     | (see the Alternate Function table in the datasheet) |
+| PWM mode             | PWM mode 1                                          |
+| Prescaler            | (to be calculated for a frequency of 50 Hz)         |
+| Period               | (to be calculated for a frequency of 50 Hz)         |
+| Duty cycle LED red   | (variable, depends on the color to show)            |
+| Duty cycle LED green | (variable, depends on the color to show)            |
+| Duty cycle LED blue  | (variable, depends on the color to show)            |
+
+The following table shows the duty cycle values for each color in function of the distance. Be careful, these values are not the ones that you put in the **CCRx register!** They depend on the PORT_DISPLAY_RGB_MAX_VALUE. The values are shown in the table below.
 
 ## Version 4
 
-Breve descripción de la versión 4.
+In Version 4 the system completes its FSM to interact with the user button, the ultrasonic transceiver, and the display. The system will show the distance to the object detected in the display.
+
+![Captura de la señal **trigger** en el osciloscopio](docs/assets/images/Captura.jpg)
 
 ## Version 5
 
-Breve descripción de la versión 5.
+**Brief description of version 5:**
+
+First, we changed the RGB display conditions from discrete to continuous, which is noticeable in the transition between red and green.
+Next, we implemented the debounce time as a hardware feature of the button, requesting it from the PORT.
+Finally, we made the LED blink—faster when the distance is shorter, and slower when it's longer.
+
+**Breve descripción de la versión 5:**
+
+Primero hemos hecho que las condiciones del display RGB pasen de ser discretas a continuas, notándose en el paso entre el rojo y verde.
+Después hemos metido el tiempo de anti-rebotes como característica HW del botón, pidiéndosela al PORT.
+Por último, hemos implementado que el LED parpadee, con más frecuencia cuando la distancia es menor, y más lento cuando es mayor.
+
+**Demonstration video of the system:**
+
+**Vídeo de demostración del sistema:**
