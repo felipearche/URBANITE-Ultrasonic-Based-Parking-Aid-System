@@ -110,7 +110,3 @@ Finally, we made the LED blink—faster when the distance is shorter, and slower
 Primero hemos hecho que las condiciones del display RGB pasen de ser discretas a continuas, notándose en el paso entre el rojo y verde.
 Después hemos metido el tiempo de anti-rebotes como característica HW del botón, pidiéndosela al PORT.
 Por último, hemos implementado que el LED parpadee, con más frecuencia cuando la distancia es menor, y más lento cuando es mayor.
-
-**Demonstration video of the system:**
-
-**Vídeo de demostración del sistema:**
